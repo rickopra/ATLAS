@@ -1,0 +1,24 @@
+{
+  "name": "atlas-onprem",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/api",
+    "apps/web"
+  ],
+  "scripts": {
+    "dev:api": "npm --workspace @atlas/api run dev",
+    "dev:web": "npm --workspace @atlas/web run dev",
+    "build": "npm run build:api && npm run build:web",
+    "build:api": "npm --workspace @atlas/api run build",
+    "build:web": "npm --workspace @atlas/web run build",
+    "db:generate": "npm --workspace @atlas/api run db:generate",
+    "db:migrate": "npm --workspace @atlas/api run db:migrate",
+    "db:deploy": "npm --workspace @atlas/api run db:deploy",
+    "import:workbook": "npm --workspace @atlas/api run import:workbook",
+    "sync:gws-directory": "npm --workspace @atlas/api run sync:gws-directory"
+  },
+  "dependencies": {
+    "xlsx": "^0.18.5"
+  }
+}

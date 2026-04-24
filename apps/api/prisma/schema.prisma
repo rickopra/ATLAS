@@ -1,0 +1,335 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Role {
+  id        String     @id @default(cuid())
+  name      String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  userRoles UserRole[]
+}
+
+model User {
+  id           String      @id @default(cuid())
+  email        String      @unique
+  username     String?     @unique
+  fullName     String?
+  passwordHash String?
+  isActive     Boolean     @default(true)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  employeeId   String?
+  employee     Employee?   @relation(fields: [employeeId], references: [id])
+  sessions     Session[]
+  userRoles    UserRole[]
+  auditLogs    AuditLog[]
+}
+
+model UserRole {
+  id        String   @id @default(cuid())
+  userId    String
+  roleId    String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roleId])
+}
+
+model Employee {
+  id           String     @id @default(cuid())
+  employeeCode String?
+  email        String?    @unique
+  fullName     String
+  title        String?
+  account      String?
+  department   String?
+  isActive     Boolean    @default(true)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  users        User[]
+}
+
+model CatalogItem {
+  id             String    @id @default(cuid())
+  category       String
+  sku            String    @unique
+  account        String?
+  specification  String?
+  estimatedPrice Decimal?  @db.Decimal(18, 2)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model MasterReference {
+  id         String   @id @default(cuid())
+  type       String
+  value      String
+  parentLink String?
+  key        String   @unique
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model MasterLocation {
+  id        String   @id @default(cuid())
+  location  String
+  floor     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([location, floor])
+}
+
+model Supplier {
+  id          String   @id @default(cuid())
+  companyName String   @unique
+  address1    String?
+  address2    String?
+  phoneFax    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Asset {
+  id               String          @id @default(cuid())
+  assetTag         String          @unique
+  serialNumber     String?
+  itemModel        String
+  category         String
+  quantity         Int             @default(1)
+  status           String
+  assignedToText   String?
+  location         String?
+  purchaseDate     DateTime?
+  invoiceNumber    String?
+  orderNumber      String?
+  vendorName       String?
+  purchasingYear   String?
+  ramSize          String?
+  ramType          String?
+  storageSize      String?
+  storageType      String?
+  externalVga      String?
+  externalVgaType  String?
+  ownerAccount     String?
+  ownerDepartment  String?
+  assignedAccount  String?
+  assignedDept     String?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  revisions        AssetRevision[]
+  handoverItems    HandoverItem[]
+  newPoEntries     NewPoEntry[]
+}
+
+model AssetRevision {
+  id          String    @id @default(cuid())
+  assetId      String?
+  assetTag     String
+  itemModel    String?
+  action       String
+  qtyBefore    Int?
+  qtyChange    Int?
+  qtyAfter     Int?
+  remark       String?
+  source       String?
+  actorEmail   String?
+  referenceId  String?
+  rawJson      Json?
+  createdAt    DateTime @default(now())
+  asset        Asset?   @relation(fields: [assetId], references: [id], onDelete: SetNull)
+}
+
+model HandoverDocument {
+  id              String        @id @default(cuid())
+  docNumber        String        @unique
+  mode             String
+  transactionType  String
+  status           String
+  holderName       String?
+  holderNik        String?
+  holderEmail      String?
+  holderDepartment String?
+  userAccount      String?
+  notes            String?
+  rawItemsText     String?
+  pdfUrl           String?
+  payloadJson      Json?
+  revisionHistoryJson Json?
+  transactionTimestamp DateTime?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  items            HandoverItem[]
+}
+
+model HandoverItem {
+  id              String           @id @default(cuid())
+  handoverId      String
+  assetId         String?
+  assetTag        String?
+  itemName        String
+  itemSku         String?
+  quantity        Int              @default(1)
+  direction       String
+  isShared        Boolean          @default(false)
+  isBroken        Boolean          @default(false)
+  sharedAccount   String?
+  sharedDept      String?
+  dutyLocation    String?
+  createdAt       DateTime         @default(now())
+  handover        HandoverDocument @relation(fields: [handoverId], references: [id], onDelete: Cascade)
+  asset           Asset?           @relation(fields: [assetId], references: [id], onDelete: SetNull)
+}
+
+model ProcurementRequest {
+  id             String   @id @default(cuid())
+  requestNumber  String   @unique
+  requestSource  String?
+  sourceReference String?
+  processorEmail String?
+  requestorEmail String?
+  requestorName  String?
+  itemSummary    String
+  quantity       Int      @default(1)
+  fulfillment    String
+  referenceNo    String?
+  status         String
+  notes          String?
+  logText        String?
+  statusRemark   String?
+  sourceSheet    String?
+  requestTimestamp DateTime?
+  isArchived     Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model AssetAssignmentLedgerEntry {
+  id                   String   @id @default(cuid())
+  sourceHash           String   @unique
+  assetTag             String?
+  holderKey            String
+  nik                  String?
+  fullName             String?
+  email                String?
+  account              String?
+  department           String?
+  docNumber            String?
+  transactionTimestamp DateTime?
+  assetLocation        String?
+  resolvedToMaster     Boolean?
+  masterRow            String?
+  source               String?
+  itemModel            String?
+  category             String?
+  updatedAt            DateTime?
+  createdAt            DateTime @default(now())
+}
+
+model EmployeeAssetHolding {
+  id          String   @id @default(cuid())
+  sourceHash  String   @unique
+  employeeKey String
+  nik         String?
+  fullName    String?
+  email       String?
+  account     String?
+  department  String?
+  title       String?
+  assetKind   String?
+  assetRef    String?
+  itemModel   String?
+  category    String?
+  quantity    Int?
+  location    String?
+  status      String?
+  source      String?
+  updatedAt   DateTime?
+  createdAt   DateTime @default(now())
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId     String?
+  actorEmail  String?
+  module      String
+  action      String
+  entityType  String?
+  entityId    String?
+  payloadJson Json?
+  createdAt   DateTime @default(now())
+  actor       User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+}
+
+model WorkbookImportBatch {
+  id           String              @id @default(cuid())
+  sourceFile   String
+  sourceSize   Int?
+  status       String
+  notes        String?
+  importedRows Int                 @default(0)
+  startedAt    DateTime            @default(now())
+  completedAt  DateTime?
+  rows         WorkbookImportRow[]
+}
+
+model WorkbookImportRow {
+  id         String              @id @default(cuid())
+  batchId    String
+  sheetName  String
+  rowNumber  Int
+  payloadJson Json
+  createdAt  DateTime            @default(now())
+  batch      WorkbookImportBatch @relation(fields: [batchId], references: [id], onDelete: Cascade)
+
+  @@unique([batchId, sheetName, rowNumber])
+}
+
+model NewPoEntry {
+  id             String   @id @default(cuid())
+  sheetName      String
+  displayOrder   Int
+  itemName       String?
+  serialNumber   String?
+  barcode        String?
+  category       String?
+  quantity       Int?
+  remarkFor      String?
+  invoiceNumber  String?
+  orderNumber    String?
+  account        String?
+  department     String?
+  remark         String?
+  syncStatus     String   @default("DRAFT")
+  syncNote       String?
+  lastSyncedAt   DateTime?
+  syncedAssetId  String?
+  syncedAssetTag String?
+  syncedQuantity Int?
+  createdByEmail String?
+  updatedByEmail String?
+  rawJson        Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  asset          Asset?   @relation(fields: [syncedAssetId], references: [id], onDelete: SetNull)
+
+  @@index([sheetName, displayOrder])
+  @@index([sheetName, syncStatus])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

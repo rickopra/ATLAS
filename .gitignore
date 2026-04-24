@@ -1,0 +1,45 @@
+node_modules
+.next
+dist
+coverage
+.env
+.env.*
+!.env.example
+*.log
+docker-data
+tmp
+prisma/dev.db
+*.tsbuildinfo
+
+# Secrets & credentials — NEVER commit
+secure/
+*.pem
+*.key
+*.p12
+
+# Internal company data — not for public repo
+EVIDENCE/
+GAS/
+
+# Company branding — add your own logo files
+attachment/
+apps/web/public/auth/
+
+# AI tooling — not part of the application
+caveman/
+AGENTS.md
+.github/
+
+# Internal artifacts & dev planning docs
+apps_tree.txt
+handover-form-live.png
+docs/ATLAS_SECRET_AND_PROPERTY_MIGRATION.md
+docs/ATLAS_GAS_1_TO_1_PARITY_BASELINE.md
+docs/*.pptx
+docs/*.pdf
+docs/*.py
+docs/*.bak
+
+# Runtime logs
+infra/logs/
+

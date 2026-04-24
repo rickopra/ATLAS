@@ -1,0 +1,11 @@
+# ATLAS boot automation
+@reboot sleep 20 && /var/www/ATLAS/infra/scripts/atlas-stack-autostart.sh >> /var/www/ATLAS/infra/logs/atlas-stack-autostart.log 2>&1
+
+# Google Workspace employee directory sync after boot
+@reboot sleep 90 && /var/www/ATLAS/infra/scripts/atlas-gws-employee-sync.sh >> /var/www/ATLAS/infra/logs/atlas-gws-employee-sync.log 2>&1
+
+# Lightweight self-heal for compose services
+*/5 * * * * /var/www/ATLAS/infra/scripts/atlas-stack-autostart.sh --ensure >> /var/www/ATLAS/infra/logs/atlas-stack-autostart.log 2>&1
+
+# Keep employee data aligned with Google Workspace
+*/15 * * * * /var/www/ATLAS/infra/scripts/atlas-gws-employee-sync.sh >> /var/www/ATLAS/infra/logs/atlas-gws-employee-sync.log 2>&1
