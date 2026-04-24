@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="atlas-logo.png" alt="ATLAS Logo" width="120" />
+
 # ATLAS
 
 **Asset Tracking & Lifecycle Administration System**
