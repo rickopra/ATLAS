@@ -4,7 +4,7 @@
 
 **Asset Tracking & Lifecycle Administration System**
 
-A self-hosted, open-source IT Asset Management platform built for organizations that need full control over their hardware inventory, employee asset assignments, procurement workflows, and handover documentation — without depending on third-party SaaS.
+A self-hosted, open-source IT Asset Management platform built for organizations that need full control over their hardware inventory, employee asset assignments, procurement workflows, and handover documentation. No third-party SaaS required.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Stack: Next.js + Fastify](https://img.shields.io/badge/Stack-Next.js%20%2B%20Fastify-black)](#tech-stack)
@@ -43,7 +43,7 @@ A self-hosted, open-source IT Asset Management platform built for organizations 
 
 ## What is ATLAS?
 
-ATLAS is a self-hosted **IT Asset Management (ITAM)** system originally built to replace a Google Apps Script-based workflow. It handles the full lifecycle of IT assets — from procurement requests through active assignments to handover and retirement — all in one place.
+ATLAS is a self-hosted **IT Asset Management (ITAM)** system originally built to replace a Google Apps Script-based workflow. It covers the full lifecycle of IT assets: from procurement requests through active assignments, all the way to handover and retirement.
 
 **ATLAS is for you if:**
 - Your team manages hundreds or thousands of IT assets across multiple departments or accounts
@@ -82,7 +82,7 @@ ATLAS is a self-hosted **IT Asset Management (ITAM)** system originally built to
 | Reverse Proxy | Nginx 1.27 |
 | Runtime | Docker, Docker Compose |
 | Auth | Session-based (local) + OAuth 2.0 (Google) |
-| AI (optional) | Google Gemini API — procurement request parsing only |
+| AI (optional) | Google Gemini API (procurement request parsing only) |
 
 ---
 
@@ -146,9 +146,9 @@ nano .env   # or use your preferred editor
 ```
 
 At minimum, fill in:
-- `POSTGRES_PASSWORD` — strong random password
-- `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`, `SESSION_COOKIE_SECRET` — min 32 random characters each
-- `APP_URL`, `APP_ORIGIN`, `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_API_URL` — your server's domain or IP
+- `POSTGRES_PASSWORD` - strong random password
+- `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`, `SESSION_COOKIE_SECRET` - minimum 32 random characters each
+- `APP_URL`, `APP_ORIGIN`, `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_API_URL` - your server's domain or IP
 - `DEFAULT_ADMIN_EMAIL`, `LOCAL_SUPERADMIN_EMAIL`, `LOCAL_SUPERADMIN_PASSWORD`
 
 See [Environment Variables](#environment-variables) for the full reference.
@@ -182,10 +182,10 @@ All configuration lives in a single `.env` file at the repository root. Copy `.e
 |---|---|---|---|
 | `NODE_ENV` | No | `production` | Runtime environment |
 | `TZ` | No | `Asia/Jakarta` | Timezone for containers |
-| `APP_URL` | **Yes** | — | Full public URL e.g. `https://atlas.yourdomain.com` |
-| `APP_ORIGIN` | **Yes** | — | Same as `APP_URL` (used for CORS) |
-| `NEXT_PUBLIC_APP_URL` | **Yes** | — | Baked into the Next.js build |
-| `NEXT_PUBLIC_API_URL` | **Yes** | — | API base URL as seen from the browser |
+| `APP_URL` | **Yes** | - | Full public URL e.g. `https://atlas.yourdomain.com` |
+| `APP_ORIGIN` | **Yes** | - | Same as `APP_URL` (used for CORS) |
+| `NEXT_PUBLIC_APP_URL` | **Yes** | - | Baked into the Next.js build |
+| `NEXT_PUBLIC_API_URL` | **Yes** | - | API base URL as seen from the browser |
 
 ### Database
 
@@ -193,8 +193,8 @@ All configuration lives in a single `.env` file at the repository root. Copy `.e
 |---|---|---|---|
 | `POSTGRES_DB` | No | `atlas` | Database name |
 | `POSTGRES_USER` | No | `atlas_app` | Database user |
-| `POSTGRES_PASSWORD` | **Yes** | — | Strong random password |
-| `DATABASE_URL` | **Yes** | — | Prisma connection string — must match the three values above |
+| `POSTGRES_PASSWORD` | **Yes** | - | Strong random password |
+| `DATABASE_URL` | **Yes** | - | Prisma connection string. Must match the three values above |
 | `REDIS_URL` | No | `redis://redis:6379` | Redis connection string |
 
 ### Secrets
@@ -212,36 +212,36 @@ All configuration lives in a single `.env` file at the repository root. Copy `.e
 | Variable | Required | Default | Description |
 |---|---|---|---|
 | `LOCAL_AUTH_ENABLED` | No | `true` | Enable username/password login |
-| `LOCAL_SUPERADMIN_EMAIL` | **Yes** | — | Email of the first admin account |
+| `LOCAL_SUPERADMIN_EMAIL` | **Yes** | - | Email of the first admin account |
 | `LOCAL_SUPERADMIN_NAME` | No | `Admin` | Display name |
-| `LOCAL_SUPERADMIN_USERNAME` | No | — | Optional username (email used if blank) |
-| `LOCAL_SUPERADMIN_PASSWORD` | **Yes** | — | Initial admin password |
+| `LOCAL_SUPERADMIN_USERNAME` | No | - | Optional username (email used if blank) |
+| `LOCAL_SUPERADMIN_PASSWORD` | **Yes** | - | Initial admin password |
 
 ### Google OAuth (optional)
 
 | Variable | Required | Default | Description |
 |---|---|---|---|
 | `GOOGLE_OAUTH_ENABLED` | No | `false` | Set `true` to enable Google login |
-| `GOOGLE_CLIENT_ID` | If enabled | — | OAuth 2.0 Client ID from GCP Console |
-| `GOOGLE_CLIENT_SECRET` | If enabled | — | OAuth 2.0 Client Secret |
+| `GOOGLE_CLIENT_ID` | If enabled | - | OAuth 2.0 Client ID from GCP Console |
+| `GOOGLE_CLIENT_SECRET` | If enabled | - | OAuth 2.0 Client Secret |
 | `GOOGLE_HOSTED_DOMAIN` | If enabled | `yourdomain.com` | Restrict login to this Google Workspace domain |
-| `GOOGLE_CALLBACK_URL` | If enabled | — | Must be `https://atlas.yourdomain.com/api/auth/google/callback` |
+| `GOOGLE_CALLBACK_URL` | If enabled | - | Must be `https://atlas.yourdomain.com/api/auth/google/callback` |
 
 ### Google Workspace Directory Sync (optional)
 
 | Variable | Required | Default | Description |
 |---|---|---|---|
 | `GOOGLE_WORKSPACE_DIRECTORY_ENABLED` | No | `false` | Enable employee sync from GWS Admin API |
-| `GOOGLE_WORKSPACE_DIRECTORY_PROJECT_ID` | If enabled | — | GCP project ID |
-| `GOOGLE_WORKSPACE_DIRECTORY_SERVICE_ACCOUNT_EMAIL` | If enabled | — | Service account email |
-| `GOOGLE_WORKSPACE_DIRECTORY_DELEGATED_ADMIN_EMAIL` | If enabled | — | Admin email for domain-wide delegation |
-| `GOOGLE_WORKSPACE_DIRECTORY_KEY_FILE` | If enabled | — | Path to service account JSON key (e.g. `/var/www/ATLAS/secure/gws.json`) |
+| `GOOGLE_WORKSPACE_DIRECTORY_PROJECT_ID` | If enabled | - | GCP project ID |
+| `GOOGLE_WORKSPACE_DIRECTORY_SERVICE_ACCOUNT_EMAIL` | If enabled | - | Service account email |
+| `GOOGLE_WORKSPACE_DIRECTORY_DELEGATED_ADMIN_EMAIL` | If enabled | - | Admin email for domain-wide delegation |
+| `GOOGLE_WORKSPACE_DIRECTORY_KEY_FILE` | If enabled | - | Path to service account JSON key (e.g. `/var/www/ATLAS/secure/gws.json`) |
 
 ### AI / Gemini (optional)
 
 | Variable | Required | Default | Description |
 |---|---|---|---|
-| `GEMINI_API_KEY` | No | — | Google AI Studio API key — enables AI-assisted procurement parsing |
+| `GEMINI_API_KEY` | No | - | Google AI Studio API key. When set, enables AI-assisted procurement parsing |
 | `GEMINI_MODEL` | No | `gemini-2.5-flash` | Gemini model to use |
 
 ---
@@ -258,7 +258,7 @@ No external dependencies required.
 
 ### Google OAuth
 
-When `GOOGLE_OAUTH_ENABLED=true`, users can sign in with their Google Workspace account. Access is restricted to the `GOOGLE_HOSTED_DOMAIN` domain — accounts outside that domain are rejected.
+When `GOOGLE_OAUTH_ENABLED=true`, users can sign in with their Google Workspace account. Access is restricted to the `GOOGLE_HOSTED_DOMAIN` domain, so accounts outside that domain will be rejected.
 
 **Setup steps:**
 1. Go to [GCP Console](https://console.cloud.google.com) → APIs & Services → Credentials
@@ -345,7 +345,7 @@ ATLAS/
 ├── docs/
 │   ├── ATLAS_Handover_User_Guide.html      # End-user handover guide
 │   └── ATLAS_Handover_User_Guide_Slides.html
-├── secure/                     # Gitignored — place GCP service account keys here
+├── secure/                     # Gitignored. Place GCP service account keys here
 ├── docker-compose.yml
 ├── .env.example
 └── package.json                # Root workspace (npm workspaces)
@@ -366,7 +366,7 @@ ATLAS uses PostgreSQL with Prisma ORM. The schema is located at `apps/api/prisma
 | `UserRole` | Many-to-many: users ↔ roles |
 | `Session` | Server-side session storage |
 | `Employee` | Employee directory, optionally synced from Google Workspace |
-| `Asset` | Core asset registry — every physical IT item |
+| `Asset` | Core asset registry for every physical IT item |
 | `AssetRevision` | Full revision history for every asset change |
 | `HandoverDocument` | Handover / BAST documents with status lifecycle |
 | `HandoverItem` | Individual asset line items within a handover document |
@@ -510,7 +510,7 @@ docker compose up -d      # Start all services
 
 The default Nginx config listens on port 80. For production, you should add TLS.
 
-### Option A — Certbot (Let's Encrypt)
+### Option A: Certbot (Let's Encrypt)
 
 ```bash
 sudo apt install certbot python3-certbot-nginx
@@ -519,7 +519,7 @@ sudo certbot --nginx -d atlas.yourdomain.com
 
 Certbot will modify `infra/nginx/default.conf` or your system nginx config automatically and set up auto-renewal.
 
-### Option B — Existing certificate
+### Option B: Existing certificate
 
 Edit `infra/nginx/default.conf` to add a `server` block on port 443:
 
@@ -642,8 +642,8 @@ docker compose logs api        # Check API startup / migration errors
 ```
 
 Common causes:
-- Wrong `DATABASE_URL` — must match `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`
-- Missing required env vars — check `apps/api/src/config.ts` for the full schema
+- Wrong `DATABASE_URL`. It must match `POSTGRES_USER`, `POSTGRES_PASSWORD`, and `POSTGRES_DB`
+- Missing required env vars. See `apps/api/src/config.ts` for the full schema
 
 ### API returns 502 Bad Gateway
 
@@ -678,7 +678,7 @@ docker compose run --rm api npm run db:push --force-reset
 
 - `GEMINI_API_KEY` must be set in `.env`
 - The API key must have access to the Gemini API (enable at [aistudio.google.com](https://aistudio.google.com))
-- Disable by leaving `GEMINI_API_KEY` blank — procurement still works without it, just without AI parsing
+- Leave `GEMINI_API_KEY` blank to disable AI parsing. Procurement still works fine without it
 
 ### View all container resource usage
 
